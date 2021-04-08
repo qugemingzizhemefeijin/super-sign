@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head th:include="fragments/head::head(title='个人资料修改',cssPaths='/static/css/plugins/cropper/cropper.min.css,')"></head>
+<style type="text/css">
+.img-preview-sm{height: 200px;width: 200px;}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+<nav th:replace="fragments/left :: left" />
+<div id="page-wrapper" class="gray-bg">
+	<div th:replace="fragments/bodyhead :: head" />
+	<div class="wrapper wrapper-content animated fadeInRight ecommerce">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="tabs-container">
+                        <ul class="nav nav-tabs">
+                            <li th:class="${tab==1?'active':''}"><a data-toggle="tab" href="#tab-1">个人信息</a></li>
+                            <li th:class="${tab==2?'active':''}" onclick="initImage();"><a data-toggle="tab" href="#tab-2">头像信息</a></li>
+                            <li th:class="${tab==3?'active':''}"><a data-toggle="tab" href="#tab-3">密码修改</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="tab-1" th:class="${'tab-pane'+(tab==1?' active':'')}">
+                                <div class="panel-body">
+                                    <form id="form1" name="form1" role="form" th:action="@{/user/profile/saveprofile}" onsubmit="return false;">
+                                    	<fieldset class="form-horizontal">
+	                                        <div class="form-group"><label class="col-sm-2 control-label">Email:</label>
+	                                            <div class="col-sm-10"><input type="text" id="email" name="email" class="form-control" th:value="${user.email}" placeholder="请输入您的Email" /></div>
+	                                        </div>
+	                                        <div class="form-group"><label class="col-sm-2 control-label">手机号码:</label>
+	                                            <div class="col-sm-10"><input type="text" id="mobile" name="mobile" class="form-control" th:value="${user.mobile}" placeholder="请输入您的手机号码" /></div>
+	                                        </div>
+	                                        <div class="form-group">
+			                                    <div class="col-sm-4 col-sm-offset-2">
+			                                        <button class="btn btn-white" type="reset">重置</button>
+			                                        <button id="button1" class="ladda-button btn btn-primary" data-style="zoom-out" type="button"><span class="ladda-label">保存</span><span class="ladda-spinner"></span></button>
+			                                    </div>
+			                                </div>
+	                                    </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab-2" th:class="${'tab-pane'+(tab==2?' active':'')}">
+                                <div class="ibox float-e-margins">
+				                    <div class="ibox-content">
+				                        <div class="row">
+				                            <div class="col-md-6">
+				                                <div class="image-crop">
+				                                	<img th:src="${Tools.isNotNull(user.avatar)?Const.getCdn(user.avatar):(#httpServletRequest.getContextPath()+'/static/img/p3.jpg')}" />
+				                            	</div>
+				                            </div>
+				                            <div class="col-md-6">
+				                                <h4>预览图</h4>
+				                                <div class="img-preview img-preview-sm"></div>
+				                                <h4>您可以将新的图像上传头像</h4>
+				                                <div class="btn-group">
+				                                    <label title="上传图片" for="inputImage" class="btn btn-primary">
+				                                        <input type="file" accept="image/*" name="file" id="inputImage" class="hide">
+				                                        选择图片
+				                                    </label>
+				                                    <label title="上传" id="button2" class="btn btn-success">上传</label>
+				                                </div>
+				                                <div class="btn-group">
+				                                    <button class="btn btn-white" id="zoomIn" type="button">放大</button>
+				                                    <button class="btn btn-white" id="zoomOut" type="button">缩小</button>
+				                        		</div>
+					                    	</div>
+				                    	</div>
+				                    </div>
+				                </div>
+                            </div>
+                            <div id="tab-3" th:class="${'tab-pane'+(tab==3?' active':'')}">
+                                <div class="panel-body">
+									<form id="form3" name="form3" role="form" th:action="@{/user/profile/savepass}" onsubmit="return false;">
+                                    	<fieldset class="form-horizontal">
+	                                        <div class="form-group"><label class="col-sm-2 control-label">密　　码:</label>
+	                                            <div class="col-sm-10"><input type="password" id="password" name="password" class="form-control" placeholder="请输入您的密码"></div>
+	                                        </div>
+	                                        <div class="form-group"><label class="col-sm-2 control-label">确认密码:</label>
+	                                            <div class="col-sm-10"><input type="password" id="password2" name="password2" class="form-control" placeholder="再次确认输入密码"></div>
+	                                        </div>
+	                                        <div class="form-group">
+			                                    <div class="col-sm-4 col-sm-offset-2">
+			                                        <button class="btn btn-white" type="reset">重置</button>
+			                                        <button id="button3" class="ladda-button btn btn-primary" data-style="zoom-out" type="button"><span class="ladda-label">保存</span><span class="ladda-spinner"></span></button>
+			                                    </div>
+			                                </div>
+	                                    </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span th:replace="fragments/bodyfooter :: footer"></span>
+	</div>
+</div>
+<th:block th:include="fragments/bodyjs :: loadJs(jsPaths='/static/js/plugins/cropper/cropper.min.js')" />
+<script>
+$('#pull-up').hide();
+$(function(){
+	var submit_btn = $( '#button1' ).ladda();
+	$('#button1').click(function(){
+		if($('#form1').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('form1',{
+				success : function(json){
+					App.Modal.success('修改成功');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	
+	$('#form1').validate({
+		rules : {
+			email : {
+				required : true,
+				isMail : true
+			},
+			mobile : {
+				required : true,
+				isMobile : true
+			}
+		},
+		errorPlacement : function (error, element) {
+			error.insertAfter(element);
+		}
+	});
+	
+	var submit_btn = $( '#button3' ).ladda();
+	$('#button3').click(function(){
+		if($('#form3').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('form3',{
+				success : function(json){
+					App.Model.success('密码修改成功');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	
+	$('#form3').validate({
+		rules : {
+			password : {
+				minlength : 5,
+				maxlength: 20,
+				required : true
+			},
+			password2 : {
+				required : true,
+				equalTo : '#password'
+			}
+		},
+		errorPlacement : function (error, element) {
+			error.insertAfter(element);
+		}
+	});
+});
+
+if(location.hash) {
+	$('.tabs-container a[href=' + location.hash + ']').tab('show');
+}
+
+(function(){
+	var userImage;
+    window.initImage = function(){
+    	if(userImage) return;
+    	userImage = $(".image-crop > img");
+		$(userImage).cropper({
+	        aspectRatio: 1,
+	        preview: ".img-preview",
+	        done: function(data) {
+	            // Output the result data for cropping image.
+	        }
+	    });
+
+	    var inputImage = $("#inputImage");
+	    if (window.FileReader) {
+	        inputImage.change(function() {
+	            var fileReader = new FileReader(),
+	                    files = this.files,
+	                    file;
+
+	            if (!files.length) {
+	                return;
+	            }
+
+	            file = files[0];
+
+	            if (/^image\/\w+$/.test(file.type)) {
+	                fileReader.readAsDataURL(file);
+	                fileReader.onload = function () {
+	                    inputImage.val("");
+	                    userImage.cropper("reset", true).cropper("replace", this.result);
+	                };
+	            } else {
+	                showMessage("Please choose an image file.");
+	            }
+	        });
+	    } else {
+	        inputImage.addClass("hide");
+	    }
+	    
+	    $("#zoomIn").click(function() {
+	    	userImage.cropper("zoom", 0.1);
+	    });
+	    $("#zoomOut").click(function() {
+	    	userImage.cropper("zoom", -0.1);
+	    });
+	    $("#download").click(function() {
+	        window.open(userImage.cropper("getDataURL"));
+	    });
+	    
+	    $('#button2').click(function(){
+	    	var s = userImage.cropper("getDataURL");
+	    	if(s == '' || s.length == 0) {
+	    		App.Modal.alert('请上传图片');
+	    		return;
+	    	}
+	    	
+	    	App.Modal.confirm('确定要更新头像吗？' , {
+	    		confirm : function(){
+	    			App.Modal.close();
+	    			App.Ajax.post(_contextPath+'/user/profile/savephoto',{getDataURL:s});
+	    		}
+	    	});
+	    });
+    }
+})();
+</script>
+</body>
+</html>

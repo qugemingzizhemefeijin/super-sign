@@ -1,0 +1,67 @@
+<div class="modal-body" data-width="600" data-title="添加账号">
+	<form id="submit_form" role="form" th:action="@{/developer/account/add/ajax}" class="form-horizontal" onsubmit="return false;">
+		<div th:unless="${appId}" class="form-group">
+			<label class="col-sm-3 control-label">选择应用<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<select name="app_id" class="select2 form-control">
+					<option value="">请选择</option>
+					<option th:each="app:${appList}" th:value="${app.id}" th:text="${app.app_name}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">开发者账号<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="username" maxlength="30" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">账号密码<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="password" maxlength="80" />
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label">创建</span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	$('#submit_form').validate({
+		rules : {
+			app_id : {
+				required : true
+			},
+			username : {
+				required : true
+			},
+			password : {
+				required : true
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+});
+</script>

@@ -1,0 +1,142 @@
+<div class="modal-body" data-width="600" data-title="添加管理员">
+	<form id="submit_form" role="form" th:action="@{/conf/admin/ajax/addsave}" class="form-horizontal" onsubmit="return false;">
+		<input type="hidden" name="id" th:value="${user?.id}" />
+		<div class="form-group">
+			<label class="col-sm-3 control-label">用户名<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="username" th:value="${user?.username}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">密　码<span class="required" th:text="${user!=null?'*':''}"></span></label>
+			<div class="col-sm-9">
+				<input type="password" class="form-control" name="password" id="password" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">确认密码<span class="required" th:text="${user!=null?'*':''}"></span></label>
+			<div class="col-sm-9">
+				<input type="password" class="form-control" name="password2" />
+				<span th:if="${user}" class="help-block m-b-none">不修改则不用填写</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">真实姓名<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="realname" th:value="${user?.realname}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">所属角色<span class="required">*</span></label>
+			<div class="col-sm-9 select2-wrapper">
+				<select id="myroles" name="roleId" class="select2 form-control">
+					<option value="">请选择</option>
+					<option th:each="role:${roleList}" th:value="${role.id}" th:selected="${user?.roleId == role.id ? 'selected' : ''}" th:text="${role.name}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">邮箱<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="email" th:value="${user?.email}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">手机号码<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="mobile" th:value="${user?.mobile}" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">状态<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<label th:unless="${user}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" checked="checked"/>正常</label>
+				<label th:unless="${user}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" />停用</label>
+				<label th:if="${user}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" th:checked="${user?.status == 1}"/>正常</label>
+				<label th:if="${user}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" th:checked="${user?.status == 14}" />停用</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">备注</label>
+			<div class="col-sm-9">
+				<textarea rows="3" class="form-control" name="remark" th:text="${user?.remark}"></textarea>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label" th:text="${user!=null?'修改':'创建用户'}"></span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript" th:inline="javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	var hasValidPassword = [[${user==null}]];
+	$('#submit_form').validate({
+		rules : {
+			username : {
+				minlength : 4,
+				maxlength:30,
+				required : true
+			},
+			password : {
+				minlength : 5,
+				maxlength: 20,
+				required : hasValidPassword
+			},
+			password2 : {
+				required : hasValidPassword,
+				equalTo : '#password'
+			},
+			realname : {
+				minlength : 2,
+				maxlength:30,
+				required : true
+			},
+			roleId : {
+				required : true
+			},
+			email : {
+				required : true,
+				isMail : true
+			},
+			mobile : {
+				required : true,
+				isMobile : true
+			},
+			status : {
+				required : true,
+			},
+			remark : {
+				required : false,
+				maxlength : 200
+			}
+		},
+		messages : {
+			password2 : {
+				equalTo : '两次输入密码不一致'
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element); // for other inputs, just perform default behavoir
+			}
+		}
+	});
+});
+</script>

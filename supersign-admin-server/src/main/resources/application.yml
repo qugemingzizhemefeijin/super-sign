@@ -1,0 +1,20 @@
+application:
+  name: supersign-admin-server
+  entity-basepackage: com.tigerjoys.shark.supersign.inter.entity
+  mapper-basepackage: com.tigerjoys.shark.supersign.inter.mapper
+
+#数据库
+
+spring:
+  profiles:
+    active: $[profiles.active]
+  mvc:
+    throw-exception-if-no-handler-found: true #出现错误时, 直接抛出异常
+  servlet:
+    multipart:
+      enabled: true #是否支持批量上传   (默认值 true)
+      location: #上传文件的临时目录 （一般情况下不用特意修改）
+      max-file-size: 200MB #上传文件最大为 10M
+      max-request-size: 200MB #上传请求最大为 10M
+      file-size-threshold: 0 #文件大小阈值，当大于这个阈值时将写入到磁盘，否则存在内存中，（默认值0 一般情况下不用特意修改）
+      

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head th:include="fragments/head::head('首页')"></head>
+
+<body>
+<div id="wrapper">
+	<nav th:replace="fragments/left :: left" />
+	<div id="page-wrapper" class="gray-bg">
+		<div th:replace="fragments/bodyhead :: head" />
+		<div class="wrapper wrapper-content animated fadeInRight">
+	    	<div class="row">
+	    		<div class="col-lg-12">
+		        	<div class="ibox-content m-b-sm border-bottom">
+		            	<div class="p-xs">
+		                	<div class="pull-left m-r-md"><i class="fa fa-globe text-navy mid-icon"></i></div>
+		                    <h2>Welcome to AAAA</h2>
+		                    <span>请选择左侧导航按钮进入相应的功能界面.</span>
+		                </div>
+		            </div>
+	            </div>
+	            <div class="col-lg-12">
+	            	
+	            </div>
+	        </div>
+	    </div>
+    	<span th:replace="fragments/bodyfooter :: footer"></span>
+	</div>
+</div>
+<th:block th:include="fragments/bodyjs :: loadJs" />
+</body>
+</html>

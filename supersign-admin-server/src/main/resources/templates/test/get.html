@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title th:text="${title}">‎</title>
+</head>
+
+<body>
+	<p th:text="${msg}"></p>
+	<p th:if="${bb == 1}">
+        测试判断展示
+    </p>
+	<p th:unless="${bb}">
+        测试没变量展示
+    </p>
+    <table border="1">
+    	<tr>
+    		<td>名字</td>
+    		<td>迭代器索引</td>
+    		<td>计数索引</td>
+    		<td>迭代对象长度</td>
+    		<td>当前是否是奇数(0开始)</td>
+    		<td>当前是否是偶数</td>
+    		<td>当前循环是否是第一条</td>
+    		<td>当前循环是否是最后一条</td>
+    	</tr>
+    	<tr th:each="u,var : ${list}">
+    		<td th:text="${u}"></td>
+    		<td th:text="${var.index}"></td><!-- 当前迭代器的索引从0开始 -->
+			<td th:text="${var.count}"></td><!-- 当前迭代对象的计数 从1开始，可以增加一列为序号功能 -->
+			<td th:text="${var.size}"></td><!-- 被迭代对象的长度 -->
+			<td th:text="${var.even}"></td><!-- 布尔值，当前循环是否是偶数/奇数 从0开始 -->
+			<td th:text="${var.odd}"></td>
+			<td th:text="${var.first}"></td><!-- 当前循环的是否是第一条如果是返回true否则返回false -->
+			<td th:text="${var.last}"></td>
+    	</tr>
+    </table>
+</body>
+</html>

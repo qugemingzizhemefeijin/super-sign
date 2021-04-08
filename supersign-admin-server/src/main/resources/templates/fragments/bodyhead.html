@@ -1,0 +1,32 @@
+<th:block th:fragment="head">
+	<div class="row border-bottom">
+		<nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+	    	<div class="navbar-header">
+	        	<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+	            <form role="search" class="navbar-form-custom" action="search_results.html">
+	                <div class="form-group">
+	                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+	                </div>
+	            </form>
+	        </div>
+			<ul class="nav navbar-top-links navbar-right">
+	        	<li>
+	            	<span class="m-r-sm text-muted welcome-message">Welcome to 管理后台</span>
+	            </li>
+	            <li>
+		            <a th:href="@{/loginout}"><i class="fa fa-sign-out"></i> 退出</a>
+	            </li>
+	        </ul>
+	    </nav>
+	</div>
+	<div class="row wrapper border-bottom white-bg page-heading">
+		<div class="col-lg-10" style="padding-top:20px;">
+	    	<ol class="breadcrumb">
+	        	<li><a th:href="@{/}">首页</a></li>
+	        	<li th:if="${permissionFstMenu}"><a th:text="${permissionFstMenu.name}"></a></li>
+	        	<li th:if="${permissionSecMenu}" th:class="${permissionThdMenu!=null?'active':''}"><a th:href="${permissionSecMenu.position}"><strong th:text="${permissionSecMenu.name}" /></a></li>
+	        	<li th:if="${permissionThdMenu}" class="active"><a th:href="${permissionThdMenu.position}"><strong th:text="${permissionThdMenu.name}" /></a></li>
+	       	</ol>
+	    </div>
+	</div>
+</th:block>

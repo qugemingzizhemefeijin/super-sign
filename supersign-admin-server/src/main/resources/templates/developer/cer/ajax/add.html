@@ -1,0 +1,86 @@
+<div class="modal-body" data-width="600" data-title="添加秘钥">
+	<form id="submit_form" role="form" th:action="@{/developer/cer/add/ajax}" class="form-horizontal" onsubmit="return false;">
+		<div th:unless="${appId}" class="form-group">
+			<label class="col-sm-3 control-label">选择账号<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<select name="account_id" class="select2 form-control">
+					<option value="">请选择</option>
+					<option th:each="account:${accounts}" th:value="${account.id}" th:text="${account.username}"></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">秘钥标识<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="certificate_id" maxlength="30" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">公钥地址<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="public_pem_path" maxlength="125" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">私钥地址<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="private_pem_path" maxlength="125" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">状态<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<label class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" checked="checked"/>上架</label>
+				<label class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="0" />下架</label>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label">创建</span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	$('#submit_form').validate({
+		rules : {
+			account_id : {
+				required : true
+			},
+			certificate_id : {
+				required : true
+			},
+			public_pem_path : {
+				required : true
+			},
+			private_pem_path : {
+				required : true
+			},
+			status : {
+				required : true
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+});
+</script>

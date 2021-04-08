@@ -1,0 +1,93 @@
+<div class="modal-body" data-width="600" data-title="添加职能">
+	<form id="submit_form" role="form" th:action="@{/conf/role/ajax/addsave}" class="form-horizontal" onsubmit="return false;">
+		<input type="hidden" name="id" th:value="${role?.id}" />
+		<div class="form-group">
+			<label class="col-sm-3 control-label">名称<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="name" th:value="${role?.name}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">父级职能<span class="required">*</span></label>
+			<div class="col-sm-9 select2-wrapper">
+				<select id="myroles" name="parentId" class="select2 form-control">
+					<option th:value="0">无</option>
+					<th:block th:utext="${roleList}"></th:block>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">优先级<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="number" class="form-control" name="priority" th:value="${role!=null?role.priority:0}" min="0" max="9999" maxlength="4" placeholder="越小越排前面" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">状态<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<label th:unless="${role}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" checked="checked"/>正常</label>
+					<label th:unless="${role}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" />停用</label>
+					<label th:if="${role}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" th:checked="${role?.status == 1}" />正常</label>
+					<label th:if="${role}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" th:checked="${role?.status == 1}" />停用</label>
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">备注</label>
+				<div class="col-sm-9">
+					<textarea rows="3" class="form-control" name="remark" th:text="${role?.remark}"></textarea>
+				</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label" th:text="${role!=null?'修改':'创建'}"></span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	$('#submit_form').validate({
+		rules : {
+			name : {
+				minlength : 1,
+				maxlength:20,
+				required : true
+			},
+			parentId : {
+				required : true
+			},
+			priority : {
+				required : true,
+				isNumber : true
+			},
+			status : {
+				required : true,
+			},
+			remark : {
+				required : false,
+				maxlength : 200
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+});
+</script>

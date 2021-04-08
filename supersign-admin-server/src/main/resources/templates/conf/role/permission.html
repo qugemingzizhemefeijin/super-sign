@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head th:include="fragments/head::head(title='权限设置',cssPaths='/static/css/plugins/zTreeStyle/zTreeStyle.css')"></head>
+</head>
+
+<body>
+<div id="wrapper">
+<nav th:replace="fragments/left :: left" />
+<div id="page-wrapper" class="gray-bg">
+	<div th:replace="fragments/bodyhead :: head" />
+	<div class="wrapper wrapper-content animated fadeInRight">
+    	<div class="row">
+        	<div class="col-lg-12">
+            	<div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <!-- BEGIN EXAMPLE TABLE PORTLET-->
+						<div class="portlet box grey">
+							<div class="portlet-title">
+								<div class="caption"><i class="icon-comments"></i>[<th:block th:text="${role.name}"></th:block>]权限设置</div>
+								<div class="actions">
+									<a href="javascript:;" id="tree_1_collapse" class="btn green">全部展开</a>
+									<a href="javascript:;" id="tree_1_expand" class="btn yellow">全部收缩</a>
+								</div>
+							</div>
+							<div class="fuelux" style="border: 1px solid #ccc;margin-bottom: 10px;">
+								<ul class="tree" id="tree_1"></ul>
+							</div>
+							<form id="submit_form" method="post" th:action="@{/conf/role/list/permissionsave}" onsubmit="return false">
+								<input type="hidden" name="authIds" id="authIds" value="" />
+								<input type="hidden" name="roleId" th:value="${role.id}" />
+								<div class="form-actions">
+									<button type="button" class="btn btn-w-m btn-primary" id="submit_btn">保存</button>
+									<button type="button" class="btn btn-w-m btn-default" onclick="top.location.href=_contextPath+'/conf/role/list';">返回</button>
+								</div>
+							</form>
+						</div>
+						<!-- END EXAMPLE TABLE PORTLET-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span th:replace="fragments/bodyfooter :: footer"></span>
+	</div>
+</div>
+<th:block th:include="fragments/bodyjs :: loadJs(jsPaths='/static/js/plugins/ztree/jquery.ztree-2.6.min.js')" />
+<script th:inline="javascript">
+var zTree1 = null;
+$('#tree_1_collapse').click(function(){
+	   var _this = $(this);
+	   if(zTree1 == null || _this.data('isclick') == 'true') return;
+	   zTree1.expandAll(true);
+	   _this.data('isclick','true');
+	   $('#tree_1_expand').data('isclick','false');
+});
+
+$('#tree_1_expand').click(function(){
+	   var _this = $(this);
+	   if(zTree1 == null || _this.data('isclick') == 'true') return;
+	   zTree1.expandAll(false);
+	   _this.data('isclick','true');
+	   $('#tree_1_collapse').data('isclick','false');
+});
+
+zTree1 = $('#tree_1').zTree({checkable:true,checkType:{"Y":"ps", "N":"s"}}, [(${zNodes})]);
+zTree1.expandAll(true);
+
+$('#submit_btn').click(function(){
+	var selectednode = zTree1.getCheckedNodes();
+	var arr = new Array();
+	$.each(selectednode,function(i,n){
+		if(App.isMath(n.id)){
+	   		arr[i] = n.id;
+	   	}
+	});
+	$('#authIds').val(arr.toString());
+	App.Ajax.submit('submit_form');
+});
+</script>
+</body>
+</html>

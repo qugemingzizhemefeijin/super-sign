@@ -1,0 +1,135 @@
+<div class="modal-body" data-width="600" data-title="添加应用">
+	<form id="submit_form" role="form" th:action="@{/sign/app/ajax/addsave}" class="form-horizontal" onsubmit="return false;" enctype="multipart/form-data">
+		<div class="form-group">
+			<label class="col-sm-3 control-label">应用名称<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="app_name" maxlength="30" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">包名<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="bundle_id" maxlength="80" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">版本号<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="version" maxlength="15" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">版本Code<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" name="version_code" maxlength="20" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">ICON小图<span class="required">*</span></label>
+			<div class="col-sm-9">
+			     <input type="file" class="imgFile btn" name="icon" accept="image/gif,image/jpeg,image/x-png,image/png" />
+			     <span class="help-block m-b-none">格式：96x96</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">ICON大图<span class="required">*</span></label>
+			<div class="col-sm-9">
+			     <input type="file" class="imgFile btn" name="fullIcon" accept="image/gif,image/jpeg,image/x-png,image/png" />
+			     <span class="help-block m-b-none">格式：192x192</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">MobileConfig<span class="required">*</span></label>
+			<div class="col-sm-9">
+			     <input type="file" class="imgFile btn" name="mbconfig" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">IPA<span class="required">*</span></label>
+			<div class="col-sm-9">
+			     <input type="file" class="imgFile btn" name="ipa" />
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">状态<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<label class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" checked="checked"/>上架</label>
+				<label class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="0" />下架</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">备注</label>
+			<div class="col-sm-9">
+				<textarea rows="3" class="form-control" name="remark"></textarea>
+			</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label">创建</span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	$('#submit_form').validate({
+		rules : {
+			app_name : {
+				required : true
+			},
+			bundle_id : {
+				required : true
+			},
+			version : {
+				required : true
+			},
+			version_code : {
+				required : true
+			},
+			icon : {
+				required : true,
+				isImg : true
+			},
+			fullIcon : {
+				required : true,
+				isImg : true
+			},
+			mbconfig: {
+				required : true,
+				isMobileConfig : true
+			},
+			ipa : {
+				required : true,
+				isIpa : true
+			},
+			status : {
+				required : true
+			},
+			remark : {
+				required : false,
+				maxlength : 200
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+});
+</script>

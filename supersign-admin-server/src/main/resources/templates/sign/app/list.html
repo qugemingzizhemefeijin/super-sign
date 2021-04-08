@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head th:include="fragments/head::head('APP列表')"></head>
+</head>
+
+<body>
+<div id="wrapper">
+<nav th:replace="fragments/left :: left" />
+<div id="page-wrapper" class="gray-bg">
+	<div th:replace="fragments/bodyhead :: head" />
+	<div class="wrapper wrapper-content animated fadeInRight">
+    	<div class="row">
+        	<div class="col-lg-12">
+            	<div class="ibox float-e-margins">
+                    <div class="ibox-content">
+						<div class="">
+				            <a onclick="App.Modal.load(_contextPath+'/sign/app/ajax/add')" href="javascript:void(0);" class="btn btn-primary ">添加应用</a>
+				        </div>
+                        <div class="table-responsive">
+	                        <table id="dataTable" class="table table-striped table-bordered table-hover dataTables-example" >
+			                    <thead>
+			                    <tr>
+			                        <th><input type="checkbox" class="checkall" /></th>
+			                        <th>ID</th>
+			                        <th>创建日期</th>
+			                        <th>APP名称</th>
+			                        <th>ICON图片</th>
+			                        <th>mb文件路径</th>
+			                        <th>下属应用</th>
+			                        <th>状态</th>
+			                        <th>操作</th>
+			                    </tr>
+			                    </thead>
+	                    </table>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <span th:replace="fragments/bodyfooter :: footer"></span>
+	</div>
+</div>
+<th:block th:include="fragments/bodyjs :: loadJs" />
+<script th:inline="none">
+$(document).ready(function(){
+	var dataTable = $('#dataTable').DataTable({
+		serverSide: true,
+		dom: '<"html5buttons"B>lTgitpr',
+		ajax: {
+			url: _contextPath+"/sign/app/list/ajax",
+			type: "post",
+			dataType : 'json',
+			headers: {'Content-Type': 'application/json'},
+			data: function(d , oSettings){
+				d._ajax = true;
+				d = $.extend(d , App.serialize('search_form'));
+				return JSON.stringify(d);
+			},
+			beforeSend : function(){
+				App.blockUI($('#dataTable'),true);
+			},
+			complete : function(){
+				App.unblockUI($('#dataTable'));
+			}
+		},
+		order : [[ 1, 'desc' ]],
+		columns : [
+		    {data: "id",searchable:false,orderable:false,render:function(data, type, full, meta){
+		    	return '<input type="checkbox" class="checkchild" value="'+ data +'" />';
+		    }},
+			{data: "id",searchable:false,orderable:true,defaultContent:''},
+			{data: "createTime",searchable:false,orderable:false,defaultContent:''},
+			{data: "appName",searchable:false,orderable:true,defaultContent:''},
+			{data: "icon",searchable:false,orderable:true,defaultContent:'',render:function(data, type, row, meta){
+				return '<img src="'+data+'" width="48" height="48" />'
+			}},
+			{data: "mb",searchable:false,orderable:false,defaultContent:'',render:function(data, type, row, meta){
+				return '<a href="'+data+'" title="'+data+'">点击下载</a>';
+			}},
+			{data: "appInfoCount",searchable:false,orderable:false,defaultContent:'',render:function(data, type, row, meta){
+				return '<a href="'+_contextPath+'/sign/appinfo/list?appid='+row.id+'" target="_blank" title="点击查看">'+data+'</a>';
+			}},
+			{data: "statusStr",searchable:false,orderable:false,defaultContent:''},
+		    {orderable:false,render:function(data, type, row, meta){
+		    	var s = '<button type="button" class="btn btn-primary btn-sm" onclick="App.Modal.load('+_contextPath+'\'/sign/app/ajax/modify\',{id:'+row.id+'});">编辑</button>　';
+		    	if(row.status == 1) {
+		    		s += '<button type="button" class="btn btn-danger btn-sm" onclick="changeStatus('+row.id+' , 0);">下架</button>';
+		    	} else {
+		    		s += '<button type="button" class="btn btn-success btn-sm" onclick="changeStatus('+row.id+' , 1);">上架</button>';
+		    	}
+		    	return s;
+		    }},
+		]
+	});
+	
+	App.Tables.set('dataTable',dataTable);
+	
+	$('#dataTable tbody').on('click', '.checkchild', function () {
+		var id = this.value;
+		var row = $(this).parents('tr');
+		if(this.checked) {
+			row.addClass('selected');
+		} else {
+			row.removeClass('selected');
+		}
+	});
+	
+	jQuery.validator.addMethod("isIpa", function(value, element) {
+		if(value == '') {
+		    return true;
+		}
+		var re = /(\\+)/g;
+		var filename=value.replace(re,"#");
+		var one=filename.split("#");
+		var two=one[one.length-1];
+		var three=two.split(".");
+		var last=three[three.length-1];
+		var tp ="ipa";
+		var rs=tp.indexOf(last.toLowerCase());
+		return rs>=0;
+	}, "格式错误，请上传后缀为IPA的文件");
+	jQuery.validator.addMethod("isMobileConfig", function(value, element) {
+		if(value == '') {
+		    return true;
+		}
+		var re = /(\\+)/g;
+		var filename=value.replace(re,"#");
+		var one=filename.split("#");
+		var two=one[one.length-1];
+		var three=two.split(".");
+		var last=three[three.length-1];
+		var tp ="mobileconfig";
+		var rs=tp.indexOf(last.toLowerCase());
+		return rs>=0;
+	}, "格式错误，请上传后缀为mobileconfig的文件");
+});
+
+function changeStatus(id , s){
+	App.Modal.confirm('你确定要'+(s==0?'下架':'上架')+'该应用吗？',{
+		confirm : function(){
+			App.Ajax.post(_contextPath+'/sign/app/ajax/changeStatus',{id:id,status:s});
+		}
+	});
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-parent</artifactId>
+    	<version>2.2.0.RELEASE</version>
+    	<relativePath/>
+	</parent>
+
+	<groupId>com.tigerjoys.supersign</groupId>
+	<artifactId>supersign</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>supersign-consumer</module>
+		<module>supersign-admin-server</module>
+		<module>supersign-server</module>
+		<module>supersign-common</module>
+		<module>supersign-interface</module>
+	</modules>
+
+	<name>${project.artifactId}</name>
+	<description>Vmi Pay Center Project</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		
+		<nbs_api_version>0.0.6-SNAPSHOT</nbs_api_version>
+		
+		<!-- soft version -->
+		<alibaba_druid_version>1.1.12</alibaba_druid_version>
+		<ant_contrib_version>1.0b3</ant_contrib_version>
+		<aliyun_oss_version>3.8.1</aliyun_oss_version>
+		<dom4j_version>1.6.1</dom4j_version>
+		<aliyun_dysmsapi_version>2.0.0</aliyun_dysmsapi_version>
+		<aliyun_java_sdk_core_version>4.4.7</aliyun_java_sdk_core_version>
+		<plist_version>1.23</plist_version>
+		<zxing_version>3.4.0</zxing_version>
+		<minio_version>3.0.12</minio_version>
+		<aliyun_oss_version>3.1.0</aliyun_oss_version>
+		
+		<!-- Test libs -->
+		<junit_version>4.12</junit_version>
+
+		<!-- Test libs -->
+		<easymock_version>3.0</easymock_version>
+		<jmockit_version>0.999.8</jmockit_version>
+		<javax_servlet_test_version>3.0.1</javax_servlet_test_version>
+		<dbunit_version>2.5.1</dbunit_version>
+
+		<!-- Build args -->
+		<skip_maven_test>true</skip_maven_test>
+		<skip_maven_deploy>false</skip_maven_deploy>
+
+		<!-- for maven compiler plugin -->
+		<java_source_version>1.8</java_source_version>
+		<java_target_version>1.8</java_target_version>
+		<file_encoding>UTF-8</file_encoding>
+		<maven-jar-plugin.version>3.0.0</maven-jar-plugin.version>
+	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>releases</id>
+			<name>Internal Releases</name>
+			<url>http://repo.appleflying.com/repository/maven-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>Snapshots</id>
+			<name>Internal Snapshots</name>
+			<url>http://repo.appleflying.com/repository/maven-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.tigerjoys.nbs</groupId>
+				<artifactId>nbs-api-common</artifactId>
+				<version>${nbs_api_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tigerjoys.nbs</groupId>
+				<artifactId>nbs-api-mybatis-core</artifactId>
+				<version>${nbs_api_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.tigerjoys.nbs</groupId>
+				<artifactId>nbs-api-web-common</artifactId>
+				<version>${nbs_api_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${alibaba_druid_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ant-contrib</groupId>
+				<artifactId>ant-contrib</artifactId>
+				<version>${ant_contrib_version}</version>
+			</dependency>
+	        <dependency>
+	            <groupId>dom4j</groupId>
+	            <artifactId>dom4j</artifactId>
+	            <version>${dom4j_version}</version>
+	        </dependency>
+			<dependency>
+	            <groupId>com.aliyun.oss</groupId>
+	            <artifactId>aliyun-sdk-oss</artifactId>
+	            <version>${aliyun_oss_version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.googlecode.plist</groupId>
+	            <artifactId>dd-plist</artifactId>
+	            <version>${plist_version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.google.zxing</groupId>
+	            <artifactId>javase</artifactId>
+	            <version>${zxing_version}</version>
+	        </dependency>
+			<dependency>
+			    <groupId>io.minio</groupId>
+			    <artifactId>minio</artifactId>
+			    <version>${minio_version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.aliyun.oss</groupId>
+				<artifactId>aliyun-sdk-oss</artifactId>
+				<version>${aliyun_oss_version}</version>
+			</dependency>
+			<!-- Tools Test -->
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>${easymock_version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.googlecode.jmockit</groupId>
+				<artifactId>jmockit</artifactId>
+				<version>${jmockit_version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymockclassextension</artifactId>
+				<version>${easymock_version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>${dbunit_version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+  
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<addMavenDescriptor>true</addMavenDescriptor>
+						<index>true</index>
+						<manifest>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>${skip_maven_test}</skip>
+					<useSystemClassLoader>true</useSystemClassLoader>
+					<forkMode>once</forkMode>
+					<argLine>${argline}</argLine>
+					<systemProperties>
+						<!-- common shared -->
+						<property>
+							<name>transporter</name>
+							<value>${transporter}</value>
+						</property>
+						<property>
+							<name>serialization</name>
+							<value>${serialization}</value>
+						</property>
+						<!-- server side -->
+						<property>
+							<name>port</name>
+							<value>${port}</value>
+						</property>
+						<property>
+							<name>threadpool</name>
+							<value>${threadpool}</value>
+						</property>
+						<property>
+							<name>threads</name>
+							<value>${threads}</value>
+						</property>
+						<property>
+							<name>iothreads</name>
+							<value>${iothreads}</value>
+						</property>
+						<!-- client side -->
+						<property>
+							<name>server</name>
+							<value>${server}</value>
+						</property>
+						<property>
+							<name>timeout</name>
+							<value>${timeout}</value>
+						</property>
+						<property>
+							<name>length</name>
+							<value>${length}</value>
+						</property>
+						<property>
+							<name>connections</name>
+							<value>${connections}</value>
+						</property>
+						<property>
+							<name>base</name>
+							<value>${base}</value>
+						</property>
+						<property>
+							<name>concurrent</name>
+							<value>${concurrent}</value>
+						</property>
+						<property>
+							<name>runs</name>
+							<value>${runs}</value>
+						</property>
+						<property>
+							<name>onerror</name>
+							<value>${onerror}</value>
+						</property>
+					</systemProperties>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java_source_version}</source>
+					<target>${java_target_version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>${skip_maven_deploy}</skip>
+				</configuration>
+			</plugin>
+			<!-- mvn -N versions:update-child-modules 批量修改版本号 -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<configuration>
+					<generateBackupPoms>false</generateBackupPoms>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- 属性配置 -->
+	<profiles>
+		<profile>
+			<id>test</id>
+			<activation>
+				<file>
+					<missing>.project</missing>
+				</file>
+			</activation>
+		</profile>
+	</profiles>
+  
+</project>

@@ -1,0 +1,6 @@
+<div th:fragment="footer" class="footer">
+	<div class="pull-right"><th:block th:text='${memoryUsed}' />GB of <strong th:text="${memoryMax+'GB'}" /> Free.</div>
+	<div>
+   		<strong>Copyright</strong> <th:block th:text=${Const.COPY_RIGHT} />
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"
+  "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
+
+<configuration>
+  <settings>
+    <!-- 将下划线字段名称映射为驼峰变量  -->
+    <!-- <setting name="mapUnderscoreToCamelCase" value="true" /> -->
+
+    <!-- mybatis进行延迟加载 -->
+    <setting name="lazyLoadingEnabled" value="false"/>
+  </settings>
+
+  <!-- <typeAliases>
+	<typeAlias type="com.tigerjoys.shark.pay.inter.entity.PayCenterPaymentPartnerAccountEntity" alias="payCenterPaymentPartnerAccount" />
+  </typeAliases>
+
+  <mappers>
+    <mapper resource="mybatis/pay/pay-center-payment-partner-mapper.xml"/>
+  </mappers> -->
+
+</configuration>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+	<!-- <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+	<include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+	<include resource="org/springframework/boot/logging/logback/file-appender.xml" /> -->
+	
+	<!-- spring boot 配置文件 -->
+	<property name="LOGGING_HOME" value="${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}"/>
+	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] - %-5level %logger{40} %line %msg%n"/>
+	<!-- <springProperty scope="context" name="LOGGING_HOME" source="logging.path" defaultValue="/opt/logs" /> -->
+	
+	<!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date [%thread] %-5level %logger{40} %line - %msg%n</pattern>
+			<charset>utf8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+        <!-- <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter> -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOGGING_HOME}/catalina.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <!-- 是否立即清空输出流，默认true，设置为false可以提高性能，但日志可能会丢失 -->
+			<immediateFlush>true</immediateFlush>
+        </encoder>
+        <append>true</append>  
+    </appender>
+
+    <!-- 异常信息记录 -->
+    <appender name="exceptLog_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOGGING_HOME}/exception.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <!-- 是否立即清空输出流，默认true，设置为false可以提高性能，但日志可能会丢失 -->
+			<immediateFlush>true</immediateFlush>
+        </encoder>
+        <append>true</append>  
+    </appender>
+    
+    <!-- 阿里巴巴慢查询日志ERROR级别日志 appender -->
+    <appender name="slow_sql_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOGGING_HOME}/slowsql.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <!-- 是否立即清空输出流，默认true，设置为false可以提高性能，但日志可能会丢失 -->
+			<immediateFlush>true</immediateFlush>
+        </encoder>
+        <append>true</append>  
+    </appender>
+    
+    <!-- alibaba durid 慢查询日志 -->
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="ERROR" additivity="true">
+    	<appender-ref ref="slow_sql_file"/>
+    </logger>
+    
+    <!-- 接收的消息INFO级别日志 appender -->
+    <appender name="hit_info_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 过滤器，只记录INFO级别的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 按天回滚 daily -->
+            <fileNamePattern>${LOGGING_HOME}/hit.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+            <!-- 是否立即清空输出流，默认true，设置为false可以提高性能，但日志可能会丢失 -->
+			<immediateFlush>true</immediateFlush>
+        </encoder>
+        <append>true</append>  
+    </appender>
+    
+    <logger name="hitlogger" level="INFO" additivity="true">  
+        <appender-ref ref="hit_info_file"/>  
+    </logger>
+    
+    <!-- 测试环境 -->
+    <springProfile name="dev">
+    	<root level="INFO">
+	        <appender-ref ref="CONSOLE"/>
+	        <appender-ref ref="FILE" />
+	    </root>
+	    <logger name="com.tigerjoys.shark.supersign" level="DEBUG" additivity="false">
+			<appender-ref ref="CONSOLE"/>
+	    	<appender-ref ref="FILE"/>
+	    </logger>
+    </springProfile>
+    
+    <!-- 测试环境 -->
+    <springProfile name="test">
+    	<root level="INFO">
+	        <appender-ref ref="CONSOLE"/>
+	        <appender-ref ref="FILE" />
+	    </root>
+	    <logger name="com.tigerjoys.shark.supersign" level="DEBUG" additivity="false">
+			<appender-ref ref="CONSOLE"/>
+	    	<appender-ref ref="FILE"/>
+	    </logger>
+    </springProfile>
+    
+    <!-- 生产环境 -->
+    <springProfile name="prod">
+    	<root level="INFO">
+    		<appender-ref ref="CONSOLE"/>
+	        <appender-ref ref="exceptLog_file" />
+	    </root>
+	    <logger name="com.tigerjoys.shark.supersign" level="INFO" additivity="false">
+	    	<appender-ref ref="FILE"/>
+	        <appender-ref ref="exceptLog_file" />
+	    </logger>
+    </springProfile>
+	
+</configuration>

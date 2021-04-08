@@ -1,0 +1,161 @@
+<div class="modal-body" data-width="600" data-title="添加按钮">
+	<form id="submit_form" role="form" th:action="@{/conf/menu/ajax/addsave}" class="form-horizontal" onsubmit="return false;">
+		<input type="hidden" name="id" th:value="${menu?.id}" />
+		<input type="hidden" name="parentId" th:value="${parentId}" />
+		<div class="form-group">
+			<label class="col-sm-3 control-label">父级名称<span class="required">&nbsp;</span></label>
+				<div class="col-sm-9"><p class="form-control-static" th:text="${parentName}"></p></div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">名称<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="name" th:value="${menu?.name}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">英文别称<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="ename" th:value="${menu?.ename}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">显示名称<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="showName" th:value="${menu?.showName}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">ICON<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="icon" th:value="${menu?.icon}" maxlength="20" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">URL地址<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="position" th:value="${menu?.position}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">显示界面<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control" name="showurl" th:value="${menu?.showurl}" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">优先级<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<input type="number" class="form-control" name="priority" th:value="${menu!=null?menu.priority:0}" min="0" max="9999" maxlength="4" placeholder="越小越排前面" />
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">按钮类型<span class="required">*</span></label>
+			<div class="col-sm-9">
+				<label th:unless="${menu}" class="checkbox-inline"><input type="radio" name="menuType" data-inline="true" value="1" checked="checked" />自动计算按钮等级</label>
+				<label th:unless="${menu}" class="checkbox-inline"><input type="radio" name="menuType" data-inline="true" value="0" />自由按钮</label>
+				<label th:if="${menu}" class="checkbox-inline"><input type="radio" name="menuType" data-inline="true" value="1" th:checked="${menu?.seat == 1}" />自动计算按钮等级</label>
+				<label th:if="${menu}" class="checkbox-inline"><input type="radio" name="menuType" data-inline="true" value="0" th:checked="${menu?.seat == 0}" />自由按钮</label>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">状态<span class="required">*</span></label>
+				<div class="col-sm-9">
+					<label th:unless="${menu}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1"  checked="checked"/>正常</label>
+					<label th:unless="${menu}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" />停用</label>
+					<label th:if="${menu}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="1" th:checked="${menu?.status == 1}" />正常</label>
+					<label th:if="${menu}" class="checkbox-inline"><input type="radio" name="status" data-inline="true" value="14" th:checked="${menu?.status == 14}" />停用</label>
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">资源路径<span class="required">&nbsp;</span></label>
+				<div class="col-sm-9">
+					<textarea rows="3" class="form-control" name="resource" th:text="${menu?.resource}"></textarea>
+					<span class="help-block m-b-none">回车分割，顶级按钮可以不需要配置资源</span>
+				</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">备注</label>
+				<div class="col-sm-9">
+					<textarea rows="3" class="form-control" name="remark" th:text="${menu?.remark}"></textarea>
+				</div>
+		</div>
+	</form>
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+	<button id="submit_btn" class="ladda-button btn btn-primary" data-style="zoom-out"><span class="ladda-label" th:text="${menu!=null?'修改':'创建'}"></span><span class="ladda-spinner"></span></button>
+</div>
+<script type="text/javascript">
+$(function(){
+	var submit_btn = $( '#submit_btn' ).ladda();
+	$('#submit_btn').click(function(){
+		if($('#submit_form').valid()){
+			submit_btn.ladda('start');
+			App.Ajax.submit('submit_form',{
+				success : function(json){
+					App.Tables.refresh('dataTable');
+				},
+				complete : function(){
+					submit_btn.ladda('stop');
+				}
+			});
+		}
+	});
+	$('#submit_form').validate({
+		rules : {
+			name : {
+				minlength : 1,
+				maxlength:20,
+				required : true
+			},
+			ename : {
+				minlength : 1,
+				maxlength:20,
+				required : true
+			},
+			showName : {
+				minlength : 1,
+				maxlength:20,
+				required : true
+			},
+			icon : {
+				required : false,
+				maxlength : 20
+			},
+			showurl : {
+				required : true,
+				maxlength:100
+			},
+			position : {
+				required : true,
+				maxlength:100
+			},
+			priority : {
+				required : true,
+				isNumber : true
+			},
+			menuType : {
+				required : true,
+			},
+			status : {
+				required : true,
+			},
+			resource : {
+				required : false,
+				maxlength : 1000
+			},
+			remark : {
+				required : false,
+				maxlength : 200
+			}
+		},
+		errorPlacement : function (error, element) {
+			if(element.data('inline') == true) {
+				error.addClass("no-left-padding").appendTo(element.parent().parent());
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+});
+</script>

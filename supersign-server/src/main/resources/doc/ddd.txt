@@ -1,0 +1,7 @@
+nohup ./supersign-server.jar --spring.profiles.active=test -Djava.security.egd=file:/dev/./urandom >> logs/supersign-server.log 2>&1 &
+
+nohup ./supersign-consumer.jar --spring.profiles.active=test -Djava.security.egd=file:/dev/./urandom >> logs/supersign-consumer.log 2>&1 &
+
+
+
+nohup /opt/work/test-pay-center-service/pay-center-service.jar --spring.profiles.active=test -Djava.security.egd=file:/dev/./urandom >> /opt/work/test-pay-center-service/logs/pay-center-service.log 2>&1 &

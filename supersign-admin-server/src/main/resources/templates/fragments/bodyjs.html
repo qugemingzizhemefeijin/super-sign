@@ -1,0 +1,36 @@
+<th:block th:fragment="loadJs()" th:width="jsPaths=(${jsPaths} ?: '')">
+<!-- Mainly scripts -->
+<script th:src="@{/static/js/jquery-2.1.1.js}"></script>
+<script th:src="@{/static/js/bootstrap.min.js}"></script>
+<script th:src="@{/static/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+<script th:src="@{/static/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+<!-- Chosen -->
+<script th:src="@{/static/js/plugins/chosen/chosen.jquery.js}"></script>
+<!-- jQuery UI -->
+<script th:src="@{/static/js/plugins/jquery-ui/jquery-ui.min.js}"></script>
+<!-- Custom and plugin javascript -->
+<script th:src="@{/static/js/inspinia.js?v=10000}"></script>
+<script th:src="@{/static/js/plugins/pace/pace.min.js}"></script>
+<!-- Sweet alert -->
+<script th:src="@{/static/js/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/static/js/plugins/modal/bootstrap-modal.js}"></script>
+<script th:src="@{/static/js/plugins/modal/bootstrap-modalmanager.js}"></script>
+<!-- Toastr -->
+<script th:src="@{/static/js/plugins/toastr/toastr.min.js}"></script>
+<!-- Jquery Validate -->
+<script th:src="@{/static/js/plugins/validate/jquery.validate.min.js}"></script>
+<script th:src="@{/static/js/plugins/fullcalendar/moment.min.js}"></script>
+<!-- Jquery Form -->
+<script th:src="@{/static/js/plugins/form/jquery.form.min.js}"></script>
+<!-- Ladda -->
+<script th:src="@{/static/js/plugins/ladda/spin.min.js}"></script>
+<script th:src="@{/static/js/plugins/ladda/ladda.min.js}"></script>
+<script th:src="@{/static/js/plugins/ladda/ladda.jquery.min.js}"></script>
+<!-- datatables -->
+<script th:src="@{/static/js/plugins/dataTables/datatables.min.js}"></script>
+<script th:src="@{/static/js/plugins/blockui/jquery.blockui.min.js}"></script>
+<script th:src="@{/static/js/plugins/smartmenu/jquery-smartMenu.js}"></script>
+<!-- My Custom -->
+<script th:src="@{/static/js/app.js?v=200229}"></script>
+<script th:each="jsPath,status:${#strings.setSplit(jsPaths,',')}" th:src="@{${jsPath}}"></script>
+</th:block>

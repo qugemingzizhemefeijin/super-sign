@@ -1,0 +1,85 @@
+server:
+  tomcat:
+    accept-count: 1000  #当所有可能的请求处理线程都在使用时，传入连接请求的最大队列长度
+    connection-timeout: 20000 #连接超时时间
+    min-spare-threads: 5  #最小工作线程数
+    max-threads: 100  #最大工作线程数
+    uri-encoding: UTF-8
+  port: 14200
+  max-http-header-size: 20480
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types:
+    - text/html
+    - text/xml
+    - text/javascript
+    - text/css
+    - text/plain
+  servlet:
+    context-path: /
+    session:
+      timeout: 7200
+      cookie:
+        name: JSESSION
+        path: /
+        http-only: true
+        
+spring:
+  thymeleaf:
+    #模板的模式，支持 HTML, XML TEXT JAVASCRIPT
+    mode: HTML
+    #编码 可不用配置
+    encoding: UTF-8
+    #开发配置为false,避免修改模板还要重启服务器
+    cache: false
+    #配置模板路径，默认是templates，可以不用配置
+    prefix: classpath:/templates/
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://49.234.40.128:3306/cgtest?serverTimezone=GMT%2B8&tinyInt1isBit=false&useUnicode=true&characterEncoding=utf8&connectTimeout=5000&socketTimeout=60000&autoReconnect=true&failOverReadOnly=false&useSSL=false
+    username: cgtest
+    password: cc43_^d##R#dre31
+    maxActive: 50
+    minIdle: 10
+    initialSize: 10
+    maxWait: 10000
+    timeBetweenEvictionRunsMillis: 30000
+    minEvictableIdleTimeMillis: 180000
+    connectionProperties: 
+    validationQuery: select 1
+    connectionInitSqls: set names utf8mb4;
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    logSlowSql: true
+    slowSqlMillis: 1000
+    mergeSql: true
+  redis:
+    host: 192.168.20.84
+    port: 6379
+    db: 3
+    timeout: 2000
+    active: 64
+    idle: 4
+    waitMillis: 1000
+    borrowCheck: true
+    returnCheck: false
+    password:
+  storage:
+    type: minio
+    endpoint: http://192.168.20.30:9000
+    bucketname: yoyo
+    username: 6DZNVXPPU4E8AF4ES61W
+    password: HpVCTLJDjk1fpJV24WVbJWrthO1TktzELhGKFk4j
+#日志
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: /opt/backend/supersign-admin-server/logs
+  level:
+    java.sql.Connection: DEBUG
+    java.sql.Statement: DEBUG
+    java.sql.PreparedStatement: DEBUG
+    org.springframework.jdbc.datasource.DataSourceTransactionManager : DEBUG
+        

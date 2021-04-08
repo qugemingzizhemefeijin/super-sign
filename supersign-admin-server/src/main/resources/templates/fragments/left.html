@@ -1,0 +1,44 @@
+<th:block th:fragment="left">
+<nav class="navbar-default navbar-static-side" role="navigation" />
+	<div class="sidebar-collapse">
+    	<ul class="nav metismenu" id="side-menu">
+        	<li class="nav-header">
+            	<div class="dropdown profile-element">
+            	 	<span><img alt="image" class="img-circle" th:src="${Tools.isNotNull(LOGIN_ADMIN.avatar)?Const.getCdn(LOGIN_ADMIN.avatar):(#httpServletRequest.getContextPath()+'/static/img/profile_small.jpg')}" width="48" height="48" /></span>
+            		<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+		            	<span class="clear"><span class="block m-t-xs"><strong class="font-bold" th:text="${LOGIN_ADMIN.username}" /></span>
+		            	<span class="text-muted text-xs block"><th:block th:text='${LOGIN_ADMIN.realname}' /><b class="caret"></b></span></span>
+		            </a>
+	                <ul class="dropdown-menu animated fadeInRight m-t-xs">
+		                <li><a th:href="@{/user/profile/info}">个人资料</a></li>
+	                    <li><a th:href="@{/user/profile/pwd}">修改密码</a></li>
+	                    <li class="divider"></li>
+	                    <li><a th:href="@{/loginout}">退出</a></li>
+	                </ul>
+            	</div>
+                 <div class="logo-element">BM</div>
+            </li>
+            <th:block th:each="topmenu,var:${permissionMenuList}">
+            <li th:class="${topmenu.id==permissionFstMenuId || (var.index == 0 && !isSelectMenu) ? 'active' : ''}">
+            	<a th:href="${topmenu.position}"><i th:class="${Tools.isNotNull(topmenu.icon)?'fa '+topmenu.icon : 'fa fa-th-large'}"></i> <span class="nav-label" th:text="${topmenu.showName}"></span> <span th:if="${Tools.length(topmenu.childrenList) > 0}" class="fa arrow"></span></a>
+            	<th:block th:if='${Tools.length(topmenu.childrenList) > 0}'>
+            	<ul class="nav nav-second-level">
+            		<th:block th:each="secMenu:${topmenu.childrenList}">
+                	<li th:class="${secMenu.id==permissionSecMenuId?'active':''}"><a th:href="@{${secMenu.position}}" th:text="${secMenu.showName}"></a> <span th:if="${Tools.length(secMenu.childrenList) > 0}" class="fa arrow"></span></li>
+               		<th:block th:if='${Tools.length(secMenu.childrenList) > 0}'>
+               			<ul class="nav nav-third-level">
+               				<th:block th:each="thdMenu:${secMenu.childrenList}">
+               				<li th:class="${thdMenu.id==permissionThdMenuId?'active':''}"><a th:href="@{${thdMenu.position}}" th:text="${thdMenu.showName}"></a></li>
+               				</th:block>
+               			</ul>
+               		</th:block>
+					</th:block>
+                </ul>
+                </th:block>
+            </li>
+            </th:block>
+        </ul>
+    	<div class="left_bottom">BM</div>
+    </div>
+</nav>
+</th:block>
