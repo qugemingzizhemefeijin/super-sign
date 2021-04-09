@@ -65,19 +65,6 @@
 		<maven-jar-plugin.version>3.0.0</maven-jar-plugin.version>
 	</properties>
 
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Internal Releases</name>
-			<url>http://repo.appleflying.com/repository/maven-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>Snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://repo.appleflying.com/repository/maven-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

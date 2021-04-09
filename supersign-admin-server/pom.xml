@@ -19,19 +19,6 @@
 		
 	</properties>
 
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Internal Releases</name>
-			<url>http://repo.appleflying.com/repository/maven-releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>Snapshots</id>
-			<name>Internal Snapshots</name>
-			<url>http://repo.appleflying.com/repository/maven-snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<dependencies>
 	  	<dependency>
 	    	<groupId>com.tigerjoys.supersign</groupId>
